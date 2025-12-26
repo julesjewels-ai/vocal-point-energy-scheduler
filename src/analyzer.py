@@ -1,16 +1,13 @@
-from enum import Enum
+from typing import Dict, Any
+from src.domain import EnergyLevel
+from src.interfaces import IEnergyAnalyzer
 
-class EnergyLevel(Enum):
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-class EnergyAnalyzer:
+class EnergyAnalyzer(IEnergyAnalyzer):
     def __init__(self):
         # In a real app, this would load models
         pass
 
-    def analyze(self, text: str, metrics: dict = None) -> EnergyLevel:
+    def analyze(self, text: str, metrics: Dict[str, Any] = None) -> EnergyLevel:
         """
         Analyze text and vocal metrics to determine energy level.
 

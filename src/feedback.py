@@ -1,9 +1,10 @@
 from typing import List, Dict
 from datetime import datetime
 from collections import defaultdict
-from src.analyzer import EnergyLevel
+from src.domain import EnergyLevel
+from src.interfaces import IFeedbackGenerator
 
-class FeedbackGenerator:
+class FeedbackGenerator(IFeedbackGenerator):
     def __init__(self):
         # Map EnergyLevel to numeric score
         self.score_map = {

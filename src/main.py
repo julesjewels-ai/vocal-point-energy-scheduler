@@ -1,9 +1,9 @@
 import sys
 import argparse
-from datetime import datetime
 from src.analyzer import EnergyAnalyzer
 from src.storage import Storage
 from src.feedback import FeedbackGenerator
+from src.service import EnergyService
 
 def main():
     parser = argparse.ArgumentParser(description="VocalPoint: AI Energy-Based Scheduler")
@@ -14,14 +14,18 @@ def main():
 
     args = parser.parse_args()
 
+    # Composition Root: Assemble dependencies
     storage = Storage()
+    analyzer = EnergyAnalyzer()
+    feedback_gen = FeedbackGenerator()
+    service = EnergyService(storage, analyzer, feedback_gen)
 
     if args.clear:
-        storage.clear_entries()
+        service.clear_history()
         print("Energy logs cleared.")
         return
 
-    # If no text argument, prompt interactively
+    # User Input Handling
     if args.text:
         text_input = args.text
     else:
@@ -36,24 +40,11 @@ def main():
 
     print(f"\nAnalyzing log: '{text_input}'")
 
-    analyzer = EnergyAnalyzer()
-    energy_level = analyzer.analyze(text_input, metrics)
+    # Delegate to Service
+    energy_level = service.record_entry(text_input, metrics)
     print(f"Detected Energy Level: {energy_level.value.upper()}")
 
-    # Save Entry
-    new_entry = {
-        "timestamp": datetime.now().isoformat(),
-        "text": text_input,
-        "metrics": metrics,
-        "energy_level": energy_level.value # Store string value
-    }
-    storage.save_entry(new_entry)
-
-    # Generate Feedback
-    entries = storage.load_entries()
-    feedback_gen = FeedbackGenerator()
-    feedback = feedback_gen.generate_feedback(entries)
-
+    feedback = service.get_feedback()
     print("\n--- Insight ---")
     print(feedback)
 

@@ -1,5 +1,6 @@
 import unittest
-from src.analyzer import EnergyAnalyzer, EnergyLevel
+from src.analyzer import EnergyAnalyzer
+from src.domain import EnergyLevel
 
 class TestEnergyAnalyzer(unittest.TestCase):
     def setUp(self):

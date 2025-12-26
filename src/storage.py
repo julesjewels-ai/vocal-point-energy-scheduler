@@ -1,11 +1,11 @@
 import json
 import os
 from typing import List, Dict
-from datetime import datetime
+from src.interfaces import IStorage
 
 LOG_FILE = "energy_log.json"
 
-class Storage:
+class Storage(IStorage):
     def __init__(self, filepath=LOG_FILE):
         self.filepath = filepath
 

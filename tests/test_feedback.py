@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime, timedelta
 from src.feedback import FeedbackGenerator
-from src.analyzer import EnergyLevel
+from src.domain import EnergyLevel
 
 class TestFeedbackGenerator(unittest.TestCase):
     def setUp(self):
