@@ -1,16 +1,25 @@
 import sys
 import argparse
+from datetime import datetime
 from src.analyzer import EnergyAnalyzer
-from src.calendar_api import Calendar
-from src.scheduler import Scheduler
+from src.storage import Storage
+from src.feedback import FeedbackGenerator
 
 def main():
     parser = argparse.ArgumentParser(description="VocalPoint: AI Energy-Based Scheduler")
     parser.add_argument("--text", type=str, help="Simulated audio transcription log", required=False)
     parser.add_argument("--pace", type=int, help="Words per minute (default 130)", default=130)
     parser.add_argument("--tone", type=float, help="Tone valence -1.0 to 1.0 (default 0.0)", default=0.0)
+    parser.add_argument("--clear", action="store_true", help="Clear all stored logs")
 
     args = parser.parse_args()
+
+    storage = Storage()
+
+    if args.clear:
+        storage.clear_entries()
+        print("Energy logs cleared.")
+        return
 
     # If no text argument, prompt interactively
     if args.text:
@@ -26,23 +35,27 @@ def main():
     }
 
     print(f"\nAnalyzing log: '{text_input}'")
-    print(f"Metrics: {metrics}")
 
     analyzer = EnergyAnalyzer()
     energy_level = analyzer.analyze(text_input, metrics)
     print(f"Detected Energy Level: {energy_level.value.upper()}")
 
-    calendar = Calendar()
-    tasks = calendar.get_tasks()
+    # Save Entry
+    new_entry = {
+        "timestamp": datetime.now().isoformat(),
+        "text": text_input,
+        "metrics": metrics,
+        "energy_level": energy_level.value # Store string value
+    }
+    storage.save_entry(new_entry)
 
-    scheduler = Scheduler()
-    recommendation = scheduler.get_recommendation(tasks, energy_level)
-    print(f"\nRecommendation: {recommendation}")
+    # Generate Feedback
+    entries = storage.load_entries()
+    feedback_gen = FeedbackGenerator()
+    feedback = feedback_gen.generate_feedback(entries)
 
-    sorted_tasks = scheduler.schedule_tasks(tasks, energy_level)
-    print("\nSuggested Schedule:")
-    for i, task in enumerate(sorted_tasks):
-        print(f"{i+1}. [{task.required_energy.value.upper()}] {task.title} ({task.duration_minutes} min)")
+    print("\n--- Insight ---")
+    print(feedback)
 
 if __name__ == "__main__":
     main()
