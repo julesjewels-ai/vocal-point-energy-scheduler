@@ -33,6 +33,20 @@ def main():
         print("Please enter your current status log (simulating audio transcription):")
         text_input = input("> ")
 
+    # Security Validation
+    MAX_TEXT_LENGTH = 5000
+    if len(text_input) > MAX_TEXT_LENGTH:
+        print(f"Error: Input text too long (limit {MAX_TEXT_LENGTH} chars).")
+        sys.exit(1)
+
+    if args.pace <= 0:
+        print("Error: Pace must be positive.")
+        sys.exit(1)
+
+    if not (-1.0 <= args.tone <= 1.0):
+        print("Error: Tone must be between -1.0 and 1.0.")
+        sys.exit(1)
+
     metrics = {
         'pace': args.pace,
         'tone_valence': args.tone
