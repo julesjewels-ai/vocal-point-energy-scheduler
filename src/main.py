@@ -1,5 +1,6 @@
 import sys
 import argparse
+import time
 from src.analyzer import EnergyAnalyzer
 from src.storage import Storage
 from src.feedback import FeedbackGenerator
@@ -22,29 +23,29 @@ def main():
 
     if args.clear:
         service.clear_history()
-        print("Energy logs cleared.")
+        print("✨ Energy logs cleared. Ready for a fresh start!")
         return
 
     # User Input Handling
     if args.text:
         text_input = args.text
     else:
-        print("--- VocalPoint Check-In ---")
-        print("Please enter your current status log (simulating audio transcription):")
-        text_input = input("> ")
+        print("\n👋 Hi there! Welcome to VocalPoint.")
+        print("📝 How are you feeling right now? (Enter your log below)")
+        text_input = input("👉 ")
 
     # Security Validation
     MAX_TEXT_LENGTH = 5000
     if len(text_input) > MAX_TEXT_LENGTH:
-        print(f"Error: Input text too long (limit {MAX_TEXT_LENGTH} chars).")
+        print(f"❌ Error: Input text too long (limit {MAX_TEXT_LENGTH} chars).")
         sys.exit(1)
 
     if args.pace <= 0:
-        print("Error: Pace must be positive.")
+        print("❌ Error: Pace must be positive.")
         sys.exit(1)
 
     if not (-1.0 <= args.tone <= 1.0):
-        print("Error: Tone must be between -1.0 and 1.0.")
+        print("❌ Error: Tone must be between -1.0 and 1.0.")
         sys.exit(1)
 
     metrics = {
@@ -52,15 +53,25 @@ def main():
         'tone_valence': args.tone
     }
 
-    print(f"\nAnalyzing log: '{text_input}'")
+    print(f"\n🔍 Analyzing log: '{text_input}'...")
+    time.sleep(0.5) # Slight delay for effect
 
     # Delegate to Service
     energy_level = service.record_entry(text_input, metrics)
-    print(f"Detected Energy Level: {energy_level.value.upper()}")
+
+    # Helper for display
+    level_icons = {
+        "high": "⚡",
+        "medium": "🌊",
+        "low": "☕"
+    }
+    icon = level_icons.get(energy_level.value, "")
+    print(f"\n✨ Detected Energy Level: {icon} {energy_level.value.upper()}")
 
     feedback = service.get_feedback()
-    print("\n--- Insight ---")
+    print("\n📊 --- Insight ---")
     print(feedback)
+    print("\n")
 
 if __name__ == "__main__":
     main()
