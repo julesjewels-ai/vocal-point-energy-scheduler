@@ -1,4 +1,5 @@
 import sys
+import re
 import argparse
 from src.analyzer import EnergyAnalyzer
 from src.storage import Storage
@@ -32,6 +33,11 @@ def main():
         print("--- VocalPoint Check-In ---")
         print("Please enter your current status log (simulating audio transcription):")
         text_input = input("> ")
+
+    # Security Enhancement: Sanitize Input
+    # Remove ANSI escape codes to prevent log spoofing/terminal injection
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    text_input = ansi_escape.sub('', text_input)
 
     # Security Validation
     MAX_TEXT_LENGTH = 5000
