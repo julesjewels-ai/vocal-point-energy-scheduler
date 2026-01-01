@@ -7,7 +7,7 @@ from src.feedback import FeedbackGenerator
 from src.service import EnergyService
 
 def main():
-    parser = argparse.ArgumentParser(description="VocalPoint: AI Energy-Based Scheduler")
+    parser = argparse.ArgumentParser(description="VocalPoint: AI Energy Analytics")
     parser.add_argument("--text", type=str, help="Simulated audio transcription log", required=False)
     parser.add_argument("--pace", type=int, help="Words per minute (default 130)", default=130)
     parser.add_argument("--tone", type=float, help="Tone valence -1.0 to 1.0 (default 0.0)", default=0.0)
@@ -32,7 +32,13 @@ def main():
     else:
         print("\n👋 Hi there! Welcome to VocalPoint.")
         print("📝 How are you feeling right now? (Enter your log below)")
-        text_input = input("👉 ")
+        text_input = input("👉 ").strip()
+
+    # Empty Input Validation
+    if not text_input:
+        print("\n🤔 It looks like you didn't say anything.")
+        print("I need a bit of text to analyze your energy! Please run me again when you're ready.")
+        sys.exit(0)
 
     # Security Validation
     MAX_TEXT_LENGTH = 5000
