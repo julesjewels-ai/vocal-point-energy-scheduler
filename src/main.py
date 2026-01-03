@@ -5,15 +5,24 @@ from src.analyzer import EnergyAnalyzer
 from src.storage import Storage
 from src.feedback import FeedbackGenerator
 from src.service import EnergyService
+from src.recorder import AudioRecorder
 
 def main():
     parser = argparse.ArgumentParser(description="VocalPoint: AI Energy-Based Scheduler")
     parser.add_argument("--text", type=str, help="Simulated audio transcription log", required=False)
+    parser.add_argument("--record", action="store_true", help="Record audio from microphone")
     parser.add_argument("--pace", type=int, help="Words per minute (default 130)", default=130)
     parser.add_argument("--tone", type=float, help="Tone valence -1.0 to 1.0 (default 0.0)", default=0.0)
     parser.add_argument("--clear", action="store_true", help="Clear all stored logs")
 
     args = parser.parse_args()
+
+    if args.record:
+        recorder = AudioRecorder(output_filename="user_input.wav")
+        recorder.record_audio()
+        print("\n(Note: Automatic transcription is not yet implemented. Please transcribe your audio manually or use --text)")
+        # In the future, we would pass the audio file to a transcription service here
+        return
 
     # Composition Root: Assemble dependencies
     storage = Storage()
