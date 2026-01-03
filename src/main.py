@@ -32,7 +32,14 @@ def main():
     else:
         print("\n👋 Hi there! Welcome to VocalPoint.")
         print("📝 How are you feeling right now? (Enter your log below)")
-        text_input = input("👉 ")
+        try:
+            text_input = input("👉 ").strip()
+            if not text_input:
+                print("⚠️  No text entered. Exiting.")
+                return
+        except KeyboardInterrupt:
+            print("\n\n👋 Goodbye! Have a great day.")
+            return
 
     # Security Validation
     MAX_TEXT_LENGTH = 5000
@@ -53,8 +60,12 @@ def main():
         'tone_valence': args.tone
     }
 
-    print(f"\n🔍 Analyzing log: '{text_input}'...")
-    time.sleep(0.5) # Slight delay for effect
+    print(f"\n🔍 Analyzing log: '{text_input}'", end="", flush=True)
+    # Micro-UX: Thinking animation
+    for _ in range(3):
+        time.sleep(0.2)
+        print(".", end="", flush=True)
+    print()
 
     # Delegate to Service
     energy_level = service.record_entry(text_input, metrics)
