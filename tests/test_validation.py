@@ -7,7 +7,7 @@ class TestSecurityValidation(unittest.TestCase):
         """Test that the application rejects massive text input."""
         massive_text = "a" * 100000
         result = subprocess.run(
-            [sys.executable, "src/main.py", "--text", massive_text],
+            [sys.executable, "-m", "src.main", "--text", massive_text],
             capture_output=True,
             text=True
         )
@@ -17,7 +17,7 @@ class TestSecurityValidation(unittest.TestCase):
     def test_invalid_pace_rejected(self):
         """Test that the application rejects invalid pace."""
         result = subprocess.run(
-            [sys.executable, "src/main.py", "--text", "status", "--pace", "-50"],
+            [sys.executable, "-m", "src.main", "--text", "status", "--pace", "-50"],
             capture_output=True,
             text=True
         )
@@ -27,7 +27,7 @@ class TestSecurityValidation(unittest.TestCase):
     def test_invalid_tone_rejected(self):
         """Test that the application rejects invalid tone."""
         result = subprocess.run(
-            [sys.executable, "src/main.py", "--text", "status", "--tone", "5.0"],
+            [sys.executable, "-m", "src.main", "--text", "status", "--tone", "5.0"],
             capture_output=True,
             text=True
         )
