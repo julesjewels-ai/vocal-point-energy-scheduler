@@ -1,3 +1,4 @@
 # VocalPoint Dependencies
 # Currently this project only uses the Python Standard Library.
 # Add your dependencies here as the project grows.
+pvrecorder
