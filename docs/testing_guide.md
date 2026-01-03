@@ -6,6 +6,10 @@ VocalPoint uses a combination of automated unit tests and manual CLI-based testi
 
 We use Python's built-in `unittest` framework for automated testing.
 
+> [!IMPORTANT]
+> Always ensure your virtual environment is activated before running tests:
+> `source .venv/bin/activate`
+
 ### Running All Tests
 To run all tests in the `tests` directory, execute the following command from the project root:
 
