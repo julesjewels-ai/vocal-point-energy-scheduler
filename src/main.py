@@ -41,7 +41,11 @@ def main():
             print("\n\n👋 Goodbye! Have a great day.")
             return
 
-    # Security Validation
+    # Validation
+    if not text_input or not text_input.strip():
+        print("\n🤔 It looks like you didn't say anything. Please try again when you're ready!")
+        return
+
     MAX_TEXT_LENGTH = 5000
     if len(text_input) > MAX_TEXT_LENGTH:
         print(f"❌ Error: Input text too long (limit {MAX_TEXT_LENGTH} chars).")
