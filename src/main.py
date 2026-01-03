@@ -22,8 +22,15 @@ def main():
     service = EnergyService(storage, analyzer, feedback_gen)
 
     if args.clear:
-        service.clear_history()
-        print("✨ Energy logs cleared. Ready for a fresh start!")
+        try:
+            confirm = input("⚠️  Are you sure you want to delete all energy logs? (y/N) ").strip().lower()
+            if confirm in ('y', 'yes'):
+                service.clear_history()
+                print("✨ Energy logs cleared. Ready for a fresh start!")
+            else:
+                print("🛑 Operation cancelled.")
+        except (KeyboardInterrupt, EOFError):
+            print("\n🛑 Operation cancelled.")
         return
 
     # User Input Handling
