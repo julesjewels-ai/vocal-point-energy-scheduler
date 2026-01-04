@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -34,6 +36,11 @@
                 <div id="indicators" class="indicators"></div>
             </section>
 
+            <section id="trends" class="trends hidden">
+                <h2>📈 Energy Trends</h2>
+                <canvas id="trendChart" width="400" height="150"></canvas>
+            </section>
+
             <section id="history" class="history">
                 <h2>📊 Recent Logs</h2>
                 <ul id="historyList"></ul>
@@ -47,4 +54,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>

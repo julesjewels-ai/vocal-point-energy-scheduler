@@ -27,6 +27,7 @@ class EnergyResponse(BaseModel):
     """Structured response for energy analysis."""
     energy_level: str  # "high", "medium", "low"
     confidence: float
+    energy_score: int  # 0-100 scale for trend visualization
     indicators: EnergyIndicators
 
 
@@ -71,6 +72,7 @@ Return your analysis as JSON with this exact structure:
 {
   "energy_level": "high" or "medium" or "low",
   "confidence": 0.0 to 1.0,
+  "energy_score": 0 to 100 (numeric energy level for trend charts, where 0=exhausted, 50=neutral, 100=peak energy),
   "indicators": {
     "tone": "description",
     "pace": "description",
