@@ -8,48 +8,71 @@
     <title>VocalPoint</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6366f1">
+    <meta name="theme-color" content="#b8c5f2">
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>🎙️ VocalPoint</h1>
-            <p class="tagline">Track your energy through your voice</p>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <h1>VocalPoint</h1>
+            <button class="settings-btn" aria-label="Settings">⚙️</button>
         </header>
+        <p class="tagline">Track your energy through your voice</p>
 
-        <main>
-            <section class="recorder">
-                <button id="recordBtn" class="record-button">
-                    <span class="icon">🎤</span>
-                    <span class="label">Tap to Record</span>
-                </button>
-                <div id="waveform" class="waveform hidden"></div>
-                <p id="status" class="status">Ready to listen</p>
-            </section>
+        <!-- Record Section -->
+        <section class="recorder">
+            <button id="recordBtn" class="record-button">
+                <span class="mic-icon">🎤</span>
+                <span class="label">Tap to<br>Record</span>
+            </button>
+            <div id="waveform" class="waveform hidden"></div>
+            <p id="status" class="status">Ready to listen</p>
+        </section>
 
-            <section id="result" class="result hidden">
-                <div class="energy-display">
-                    <span id="energyIcon" class="energy-icon"></span>
-                    <span id="energyLevel" class="energy-level"></span>
+        <!-- Result Display (hidden until result) -->
+        <section id="result" class="result hidden">
+            <div class="energy-display">
+                <span id="energyIcon" class="energy-icon"></span>
+                <span id="energyLevel" class="energy-level"></span>
+            </div>
+            <div id="indicators" class="indicators"></div>
+        </section>
+
+        <!-- Energy Trends Card -->
+        <section id="trends" class="card trends hidden">
+            <h2>Energy Trends</h2>
+            <div class="chart-container">
+                <div class="chart-labels">
+                    <div class="label-row"><span class="label-icon">🔥</span><span>High</span></div>
+                    <div class="label-row"><span class="label-icon">💧</span><span>Medium</span></div>
+                    <div class="label-row"><span class="label-icon">☕</span><span>Low</span></div>
                 </div>
-                <div id="indicators" class="indicators"></div>
-            </section>
+                <canvas id="trendChart"></canvas>
+            </div>
+        </section>
 
-            <section id="trends" class="trends hidden">
-                <h2>📈 Energy Trends</h2>
-                <canvas id="trendChart" width="400" height="150"></canvas>
-            </section>
+        <!-- Recent Logs Card -->
+        <section class="card logs">
+            <h2>Recent Logs</h2>
+            <ul id="historyList"></ul>
+        </section>
 
-            <section id="history" class="history">
-                <h2>📊 Recent Logs</h2>
-                <ul id="historyList"></ul>
-            </section>
-        </main>
-
-        <footer>
-            <p>Privacy-first • All data stays local</p>
-        </footer>
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🕐</span>
+                <span class="nav-label">History</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </a>
+        </nav>
     </div>
 
     <script src="app.js"></script>

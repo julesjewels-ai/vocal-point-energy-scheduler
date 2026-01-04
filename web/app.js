@@ -24,7 +24,7 @@ let isRecording = false;
 // Energy Level Mapping
 const ENERGY_CONFIG = {
     high: { icon: '⚡', label: 'High Energy' },
-    medium: { icon: '🌊', label: 'Medium Energy' },
+    medium: { icon: '💧', label: 'Medium Energy' },
     low: { icon: '☕', label: 'Low Energy' }
 };
 
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Create waveform bars
 function setupWaveformBars() {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 20; i++) {
         const bar = document.createElement('div');
         bar.className = 'bar';
         bar.style.animationDelay = `${i * 0.05}s`;
@@ -146,10 +146,11 @@ function displayResult(result) {
 
 // Update UI state
 function updateUI(state) {
+    const label = recordBtn.querySelector('.label');
     switch (state) {
         case 'recording':
             recordBtn.classList.add('recording');
-            recordBtn.querySelector('.label').textContent = 'Tap to Stop';
+            label.innerHTML = 'Tap to<br>Stop';
             waveform.classList.remove('hidden');
             status.textContent = '🎙️ Listening...';
             break;
@@ -162,7 +163,7 @@ function updateUI(state) {
         case 'ready':
         default:
             recordBtn.classList.remove('recording', 'loading');
-            recordBtn.querySelector('.label').textContent = 'Tap to Record';
+            label.innerHTML = 'Tap to<br>Record';
             waveform.classList.add('hidden');
             status.textContent = 'Ready to listen';
             break;
@@ -182,7 +183,7 @@ function saveToHistory(result) {
     renderTrendChart();
 }
 
-// Render trend chart using Canvas API
+// Render trend chart using Canvas API with gradient fill
 function renderTrendChart() {
     const history = JSON.parse(localStorage.getItem('vocalpoint_history') || '[]');
     
@@ -197,73 +198,73 @@ function renderTrendChart() {
     const rect = trendChart.getBoundingClientRect();
     
     // Set canvas resolution for sharp rendering
-    trendChart.width = rect.width * 2;
-    trendChart.height = rect.height * 2;
-    ctx.scale(2, 2);
+    const dpr = window.devicePixelRatio || 1;
+    trendChart.width = rect.width * dpr;
+    trendChart.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
     
     const width = rect.width;
     const height = rect.height;
-    const padding = 20;
+    const padding = { top: 10, right: 10, bottom: 10, left: 10 };
     
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
     
     // Get data points (newest first, so reverse for left-to-right chronological)
     const dataPoints = history
-        .slice(0, 20)  // Show last 20 entries
+        .slice(0, 15)  // Show last 15 entries
         .map(entry => entry.energy_score ?? levelToScore(entry.energy_level))
         .reverse();
     
-    const xStep = (width - padding * 2) / (dataPoints.length - 1);
-    const yMin = 0;
-    const yMax = 100;
-    const yScale = (height - padding * 2) / (yMax - yMin);
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+    const xStep = chartWidth / (dataPoints.length - 1);
+    const yScale = chartHeight / 100;
     
-    // Draw grid lines
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-    ctx.lineWidth = 1;
-    [25, 50, 75].forEach(val => {
-        const y = height - padding - (val * yScale);
-        ctx.beginPath();
-        ctx.moveTo(padding, y);
-        ctx.lineTo(width - padding, y);
-        ctx.stroke();
-    });
+    // Build path
+    const points = dataPoints.map((score, i) => ({
+        x: padding.left + (i * xStep),
+        y: padding.top + chartHeight - (score * yScale)
+    }));
     
-    // Draw trend line
-    ctx.strokeStyle = 'var(--primary)';
-    ctx.lineWidth = 3;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    
-    // Create gradient
-    const gradient = ctx.createLinearGradient(0, padding, 0, height - padding);
-    gradient.addColorStop(0, '#22c55e');  // High energy - green
-    gradient.addColorStop(0.5, '#3b82f6');  // Medium - blue
-    gradient.addColorStop(1, '#f97316');  // Low - orange
-    ctx.strokeStyle = gradient;
+    // Draw filled area with gradient
+    const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+    gradient.addColorStop(0, 'rgba(99, 179, 237, 0.3)');
+    gradient.addColorStop(1, 'rgba(99, 179, 237, 0.05)');
     
     ctx.beginPath();
-    dataPoints.forEach((score, i) => {
-        const x = padding + (i * xStep);
-        const y = height - padding - (score * yScale);
-        if (i === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
-    });
+    ctx.moveTo(points[0].x, height - padding.bottom);
+    points.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(points[points.length - 1].x, height - padding.bottom);
+    ctx.closePath();
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    
+    // Draw line
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        // Smooth curve using quadratic bezier
+        const xc = (points[i].x + points[i - 1].x) / 2;
+        const yc = (points[i].y + points[i - 1].y) / 2;
+        ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, xc, yc);
+    }
+    ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+    ctx.strokeStyle = '#63b3ed';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
     ctx.stroke();
     
-    // Draw data points
-    dataPoints.forEach((score, i) => {
-        const x = padding + (i * xStep);
-        const y = height - padding - (score * yScale);
-        
-        ctx.fillStyle = score >= 70 ? '#22c55e' : score >= 40 ? '#3b82f6' : '#f97316';
+    // Draw dots
+    points.forEach(p => {
         ctx.beginPath();
-        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
         ctx.fill();
+        ctx.strokeStyle = '#63b3ed';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     });
 }
 
@@ -283,15 +284,16 @@ function loadHistory() {
     historyList.innerHTML = '';
 
     if (history.length === 0) {
-        historyList.innerHTML = '<li style="text-align:center;color:var(--text-muted);">No logs yet</li>';
+        historyList.innerHTML = '<li class="empty-state">No logs yet. Tap to record!</li>';
         return;
     }
 
-    history.forEach(entry => {
+    history.slice(0, 5).forEach(entry => {
         const config = ENERGY_CONFIG[entry.energy_level] || ENERGY_CONFIG.medium;
         const li = document.createElement('li');
         li.innerHTML = `
             <span class="time">${formatTime(entry.timestamp)}</span>
+            <span class="separator">-</span>
             <span class="level ${entry.energy_level}">${config.icon} ${config.label}</span>
         `;
         historyList.appendChild(li);
