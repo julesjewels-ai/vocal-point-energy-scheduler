@@ -1,3 +1,12 @@
 # VocalPoint Dependencies
-# Currently this project only uses the Python Standard Library.
-# Add your dependencies here as the project grows.
+
+# Gemini AI
+google-genai>=1.0.0
+
+# API Server
+fastapi>=0.100.0
+uvicorn>=0.20.0
+python-multipart>=0.0.6
+
+# Data Validation
+pydantic>=2.0.0
