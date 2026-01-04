@@ -2,7 +2,7 @@
  * VocalPoint PWA - Audio Recording & Energy Analysis
  */
 
-const API_URL = 'https://railway.com/project/8914bafc-9ccc-474a-9958-1dc477428a22';
+const API_URL = 'https://vocal-point-energy-scheduler.onrender.com';
 
 // DOM Elements
 const recordBtn = document.getElementById('recordBtn');
