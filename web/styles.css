@@ -393,3 +393,17 @@ body {
         font-size: 2rem;
     }
 }
+
+/* Accessibility: Focus Styles */
+:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Ensure round buttons keep round focus */
+.record-button:focus-visible,
+.settings-btn:focus-visible {
+    outline-offset: 4px;
+    border-radius: 50%;
+}
