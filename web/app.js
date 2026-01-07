@@ -150,12 +150,14 @@ function updateUI(state) {
     switch (state) {
         case 'recording':
             recordBtn.classList.add('recording');
+            recordBtn.setAttribute('aria-pressed', 'true');
             label.innerHTML = 'Tap to<br>Stop';
             waveform.classList.remove('hidden');
             status.textContent = '🎙️ Listening...';
             break;
         case 'processing':
             recordBtn.classList.remove('recording');
+            recordBtn.setAttribute('aria-pressed', 'false');
             recordBtn.classList.add('loading');
             waveform.classList.add('hidden');
             status.textContent = '⏳ Processing...';
@@ -163,6 +165,7 @@ function updateUI(state) {
         case 'ready':
         default:
             recordBtn.classList.remove('recording', 'loading');
+            recordBtn.setAttribute('aria-pressed', 'false');
             label.innerHTML = 'Tap to<br>Record';
             waveform.classList.add('hidden');
             status.textContent = 'Ready to listen';

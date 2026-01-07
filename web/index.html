@@ -22,16 +22,16 @@
 
         <!-- Record Section -->
         <section class="recorder">
-            <button id="recordBtn" class="record-button">
+            <button id="recordBtn" class="record-button" aria-pressed="false">
                 <span class="mic-icon">🎤</span>
                 <span class="label">Tap to<br>Record</span>
             </button>
-            <div id="waveform" class="waveform hidden"></div>
-            <p id="status" class="status">Ready to listen</p>
+            <div id="waveform" class="waveform hidden" aria-hidden="true"></div>
+            <p id="status" class="status" aria-live="polite" role="status">Ready to listen</p>
         </section>
 
         <!-- Result Display (hidden until result) -->
-        <section id="result" class="result hidden">
+        <section id="result" class="result hidden" aria-live="polite">
             <div class="energy-display">
                 <span id="energyIcon" class="energy-icon"></span>
                 <span id="energyLevel" class="energy-level"></span>
@@ -40,10 +40,10 @@
         </section>
 
         <!-- Energy Trends Card -->
-        <section id="trends" class="card trends hidden">
+        <section id="trends" class="card trends hidden" aria-label="Energy trend chart showing energy levels over time">
             <h2>Energy Trends</h2>
-            <div class="chart-container">
-                <div class="chart-labels">
+            <div class="chart-container" role="img" aria-label="Graph of recent energy levels">
+                <div class="chart-labels" aria-hidden="true">
                     <div class="label-row"><span class="label-icon">🔥</span><span>High</span></div>
                     <div class="label-row"><span class="label-icon">💧</span><span>Medium</span></div>
                     <div class="label-row"><span class="label-icon">☕</span><span>Low</span></div>
