@@ -22,12 +22,12 @@
 
         <!-- Record Section -->
         <section class="recorder">
-            <button id="recordBtn" class="record-button">
+            <button id="recordBtn" class="record-button" aria-pressed="false">
                 <span class="mic-icon">🎤</span>
                 <span class="label">Tap to<br>Record</span>
             </button>
             <div id="waveform" class="waveform hidden"></div>
-            <p id="status" class="status">Ready to listen</p>
+            <p id="status" class="status" aria-live="polite">Ready to listen</p>
         </section>
 
         <!-- Result Display (hidden until result) -->
@@ -48,7 +48,7 @@
                     <div class="label-row"><span class="label-icon">💧</span><span>Medium</span></div>
                     <div class="label-row"><span class="label-icon">☕</span><span>Low</span></div>
                 </div>
-                <canvas id="trendChart"></canvas>
+                <canvas id="trendChart" role="img" aria-label="Line chart showing your recent energy levels trend over time"></canvas>
             </div>
         </section>
 
@@ -60,7 +60,7 @@
 
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
-            <a href="#" class="nav-item active">
+            <a href="#" class="nav-item active" aria-current="page">
                 <span class="nav-icon">🏠</span>
                 <span class="nav-label">Dashboard</span>
             </a>
